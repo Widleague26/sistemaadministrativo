@@ -7,9 +7,9 @@ include"../inc/comun.php";
 include"../fpdf/fpdf.php";
 
 
- $bd = new GestarBD;
- 
- $x1=$_GET['codigo'];
+	$bd = new GestarBD;
+	if(isset($_get['codigo']))
+	$x1=$_GET['codigo'];
 
 date_default_timezone_set('America/caracas');
 $hora = date('H:i:s a');

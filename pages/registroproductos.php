@@ -17,10 +17,9 @@ if (isset($_GET['nuevo'])) {
 $nombre=strtoupper($_POST["nombre"]);
 $descripcion=strtoupper($_POST["descripcion"]);
 $marca=$_POST["marca"];
-$costo=strtoupper($_POST["costo"]);
-$p_publico=$_POST["preciop"];  
+$Codigo = isset($_POST["Codigo"]) ? strtoupper($_POST["Codigo"]) : ''; // Definir $Codigo
+$Gramos_ML = isset($_POST["Gramos_ML"]) ? $_POST["Gramos_ML"] : ''; // Definir $Gramos_ML correctamente
 $provedor=$_POST["provedor"];      
-     
 $estado=strtoupper($_POST["estado"]);
 
 
@@ -33,11 +32,11 @@ $cs=$bd->consulta($sql);
 
 if($bd->numeroFilas($cs)==0){
 
-$sql2="INSERT INTO `productos` ( `modelo`, `descripcion`, `marca`, `costo`, `p_publico`, `provedor`, `estado`, `cantidad`) 
-VALUES ( '$nombre', '$descripcion', '$marca', '$costo', '$p_publico', '$provedor', '$estado','0')";
+$sql2="INSERT INTO `productos` ( `modelo`, `descripcion`, `marca`, `Codigo`, `Gramos_ML`, `provedor`, `estado`, `cantidad`) 
+VALUES ( '$nombre', '$descripcion', '$marca', '$Codigo', '$Gramos_ML', '$provedor', '$estado','0')";
 
 /*
-INSERT INTO `productos` (`id_productos`, `modelo`, `descripcion`, `marca`, `cantidad`, `costo`, `p_publico`, `provedor`, `estado`) VALUES (NULL, 'TELEFONO', 'EVOLUXION 3', 'HUAWAI', NULL, '50000', '80000', 'VENTACEL', 'NUEVO');*/
+INSERT INTO `productos` (`id_productos`, `modelo`, `descripcion`, `marca`, `cantidad`, `Codigo`, `Gramos_ML`, `provedor`, `estado`) VALUES (NULL, 'TELEFONO', 'EVOLUXION 3', 'HUAWAI', NULL, '50000', '80000', 'VENTACEL', 'NUEVO');*/
 
                           $cs=$bd->consulta($sql2);
 
@@ -82,23 +81,31 @@ INSERT INTO `productos` (`id_productos`, `modelo`, `descripcion`, `marca`, `cant
                                            
                                             
                                             
-                                            
-                                            <label for="exampleInputFile">Modelo</label>
-                                            <input  onkeypress="return caracteres(event)" onblur="this.value=this.value.toUpperCase();" type="text" required type="tex" name="nombre" class="form-control" value="<?php echo $var2 ?>" id="exampleInputEmail1" placeholder="Intoducir el Nombre">
+                                        <?php
+$var1 = 'serial';
+$var2 = 'Nombre farmaco';
+$var3 = 'descripcion del farmaco ';
+$var4 = 'marca del farmaco'; 
+$var5 = 'Gramos/mililitros' ; 
+$var6 = 'Nombre del proveedor' ; 
+// Otros códigos PHP...
+?>
+                <label for="exampleInputFile">Modelo</label>
+                <input  onkeypress="return caracteres(event)" onblur="this.value=this.value.toUpperCase();" type="text" required type="texN" name="nombre" class="form-control" value="<?php echo $var2 ?>" id="exampleInputEmail1" placeholder="Intoducir el Modelo">
                                             <label for="exampleInputFile">Descripcion</label>
                                             <input   required type="tex" name="descripcion" class="form-control" value="<?php echo $var3 ?>" id="exampleInputEmail1" placeholder="descripcion">
 
-                                             <label for="exampleInputFile">Marca</label>
+                                        <label for="exampleInputFile">Marca</label>
                                             <input    required type="tex" name="marca" class="form-control" value="<?php echo $var3 ?>" id="exampleInputEmail1" placeholder="marca">
 
-                                            <label for="exampleInputFile">Costo</label>
-                                            <input onkeydown="return enteros(this, event)" required type="text" name="costo" class="form-control" value="<?php echo $var1 ?>" id="exampleInputEmail1" placeholder="costo">
+                                            <label for="exampleInputFile">Codigo</label>
+                                            <input onkeydown="return enteros(this, event)" required type="text" name="codigo" class="form-control" value="<?php echo $var1 ?>" id="exampleInputEmail1" placeholder="codigo">
 
-                                            <label for="exampleInputFile">Precio Publico</label>
-                                            <input onkeydown="return enteros(this, event)" required type="text" name="preciop" class="form-control" value="<?php echo $var1 ?>" id="exampleInputEmail1" placeholder="Precio Publico">
+                                            <label for="exampleInputFile">Gramos_ML</label>
+                                            <input onkeydown="return enteros(this, event)" required type="text" name="Gramos_ML" class="form-control" value="<?php echo $var5 ?>" id="exampleInputEmail1" placeholder="Gramos_ML">
 
                                                 <label for="exampleInputFile">Proveedor</label>
-                                            <input  type="text" name="provedor" class="form-control" value="<?php echo $var1 ?>" id="exampleInputEmail1" placeholder="Precio Publico">
+                                            <input  type="text" name="provedor" class="form-control" value="<?php echo $var6 ?>" id="exampleInputEmail1" placeholder="Provedor">
                                             
 
                                             <label for="exampleInputFile">Estado del equipo</label>
@@ -106,8 +113,6 @@ INSERT INTO `productos` (`id_productos`, `modelo`, `descripcion`, `marca`, `cant
                                                
                                                 <select  for="exampleInputEmail" class="form-control" name='estado'>
      <option  value="nuevo">Nuevo</option>
-     <option value="usado">Usado</option>
-     <option value="reparado">Reparado</option>
 
    </select>
                                             
@@ -132,20 +137,14 @@ INSERT INTO `productos` (`id_productos`, `modelo`, `descripcion`, `marca`, `cant
 <?php
 }
 
-	
-   
-   if (isset($_GET['lista'])) { 
-
-    $x1=$_GET['codigo'];
-
-                        if (isset($_POST['lista'])) {
-                           
-
-
-
-        
-
+if (isset($_GET['lista'])) { 
+    if (isset($_GET['codigo'])) {
+        $x1 = $_GET['codigo'];
+    } else {
+        // Manejar el caso en que 'codigo' no esté definido
+        $x1 = 'valor_por_defecto'; // Puedes establecer un valor por defecto o manejar el error de otra manera
 }
+
 ?>
   
                             
@@ -176,9 +175,10 @@ INSERT INTO `productos` (`id_productos`, `modelo`, `descripcion`, `marca`, `cant
                                         <?php
                                             if($tipo2==1){
                                         
-                                        $consulta="SELECT id_productos,p_publico, descripcion, modelo, marca, estado, cantidad FROM productos ORDER BY id_productos ASC ";
+                                        $consulta="SELECT id_productos,Gramos_ML, descripcion, modelo, marca, estado, cantidad FROM productos ORDER BY id_productos ASC ";
                                         $bd->consulta($consulta);
                                         while ($fila=$bd->mostrar_registros()) {
+                                            if (isset($fila['status']))
                                             switch ($fila['status']) {
                                                 case 1:
                                                     $btn_st = "danger";
@@ -191,52 +191,49 @@ INSERT INTO `productos` (`id_productos`, `modelo`, `descripcion`, `marca`, `cant
                                                     break;
                                             }
                                              //echo '<li data-icon="delete"><a href="?mod=lugares?edit='.$fila['id_tipo'].'"><img src="images/lugares/'.$fila['imagen'].'" height="350" >'.$fila['nombre'].'</a><a href="?mod=lugares?borrar='.$fila['id_tipo'].'" data-position-to="window" >Borrar</a></li>';
-                                             echo "<tr>
+                                            echo "<tr>
                                                         <td>
-                                                           
-                                                              $fila[modelo]
+                                                        
+                                                            $fila[modelo]
                                                             
                                                         </td>
-                                                         <td>
+                                                        <td>
                                                             $fila[descripcion]
                                                         </td>
                                                         <td> $fila[marca]                                                        </td>
                                                         <td>
                                                             $fila[estado]
                                                         </td>
-                                                         <td>
-                                                            $fila[p_publico]
+                                                        <td>
+                                                            $fila[Gramos_ML]
                                                         </td>
-                                                         <td>";
-                                                         if( $fila[cantidad]==0){
-                                                          echo 0;
-                                                         }else{
-
-                                                          
-                                                           echo  $fila['cantidad'];
-
-                                                         }
+                                                        <td>";
+                                                        if( $fila['cantidad']==0){
+                                                        echo 0;
+                                                        }else{
+                                                        echo  $fila['cantidad'];
+                                                        }
 
 
-                                                          echo "
+                                                        echo "
 
                                                         </td>
-                                                       
-                                                         <td><center>
+                                                    
+                                                        <td><center>
                                                             ";
-      
+
 echo"
-       <a  href=?mod=registroproductos&consultar&codigo=".$fila["id_productos"]."><img src='./img/consultarr.png' width='25' alt='Edicion' title='VER LOS DATOS DE ".$fila["descripcion"]."'></a> ";
-       if($tipo2==1){
+    <a  href=?mod=registroproductos&consultar&codigo=".$fila["id_productos"]."><img src='./img/consultarr.png' width='25' alt='Edicion' title='VER LOS DATOS DE ".$fila["descripcion"]."'></a> ";
+    if($tipo2==1){
                                 echo "
-      
-      <a  href=?mod=registroproductos&editar&codigo=".$fila["id_productos"]."><img src='./img/editar.png' width='25' alt='Edicion' title='EDITAR LOS DATOS DE ".$fila["descripcion"]."'></a> 
-      <a   href=?mod=registroproductos&eliminar&codigo=".$fila["id_productos"]."><img src='./img/elimina2.png'  width='25' alt='Edicion' title='ELIMINAR A   ".$fila["descripcion"]."'></a>
-      ";
+    
+    <a  href=?mod=registroproductos&editar&codigo=".$fila["id_productos"]."><img src='./img/editar.png' width='25' alt='Edicion' title='EDITAR LOS DATOS DE ".$fila["descripcion"]."'></a> 
+    <a   href=?mod=registroproductos&eliminar&codigo=".$fila["id_productos"]."><img src='./img/elimina2.png'  width='25' alt='Edicion' title='ELIMINAR A   ".$fila["descripcion"]."'></a>
+    ";
     }
-     
-     }
-                                               echo "    </center>     </td>
+    
+    }
+                                            echo "    </center>     </td>
                                                     </tr>";
 
 
@@ -319,8 +316,8 @@ $x1=$_GET['codigo'];
 $nombre=strtoupper($_POST["nombre"]);
 $descripcion=strtoupper($_POST["descripcion"]);
 $marca=$_POST["marca"];
-$costo=strtoupper($_POST["costo"]);
-$p_publico=$_POST["preciop"];      
+$Codigo=strtoupper($_POST["Codigo"]);
+$Gramos_ML=$_POST["preciop"];      
 $provedor=$_POST["provedor"];      
 $estado=strtoupper($_POST["estado"]);
 
@@ -345,8 +342,8 @@ $sql22=" UPDATE productos SET
 modelo='$nombre' ,
 descripcion='$descripcion' ,
 marca='$marca' ,
-costo='$costo', 
-p_publico='$p_publico',
+Codigo='$Codigo', 
+Gramos_ML='$Gramos_ML',
 provedor='$provedor',
 estado='$estado'  
  where id_productos='$x1'";
@@ -370,7 +367,7 @@ $bd->consulta($sql22);
 
 
                                         
-     $consulta="SELECT modelo, descripcion, marca,costo,p_publico,provedor FROM productos where id_productos='$x1'";
+     $consulta="SELECT modelo, descripcion, marca,Codigo,Gramos_ML,provedor FROM productos where id_productos='$x1'";
      $bd->consulta($consulta);
      while ($fila=$bd->mostrar_registros()) {
 
@@ -391,39 +388,39 @@ $bd->consulta($sql22);
                                         <div class="form-group">
                                            
                                             
-               
-                           
+            
+                        
                         <label for="exampleInputFile">Modelo</label>
                                             <input  onkeypress="return caracteres(event)" onblur="this.value=this.value.toUpperCase();" type="text" required type="tex" name="nombre" class="form-control" value="<?php echo $fila['modelo'] ?>" id="exampleInputEmail1" placeholder="Intoducir el Nombre">
                                             <label for="exampleInputFile">Descripcion</label>
                                             <input   required type="tex" name="descripcion" class="form-control" value="<?php echo $fila['descripcion'] ?>" id="exampleInputEmail1" placeholder="descripcion">
 
-                                             <label for="exampleInputFile">Marca</label>
+                                            <label for="exampleInputFile">Marca</label>
                                             <input    required type="tex" name="marca" class="form-control" value="<?php echo $fila['marca'] ?>" id="exampleInputEmail1" placeholder="marca">
 
-                                            <label for="exampleInputFile">Costo</label>
-                                            <input onkeydown="return enteros(this, event)" required type="text" name="costo" class="form-control" value="<?php echo $fila['costo'] ?>" id="exampleInputEmail1" placeholder="costo">
+                                            <label for="exampleInputFile">Codigo</label>
+                                            <input onkeydown="return enteros(this, event)" required type="text" name="Codigo" class="form-control" value="<?php echo $fila['Codigo'] ?>" id="exampleInputEmail1" placeholder="Codigo">
 
                                             <label for="exampleInputFile">Precio Publico</label>
-                                            <input onkeydown="return enteros(this, event)" required type="text" name="preciop" class="form-control" value="<?php echo $fila['p_publico'] ?>" id="exampleInputEmail1" placeholder="Precio Publico">
+                                            <input onkeydown="return enteros(this, event)" required type="text" name="preciop" class="form-control" value="<?php echo $fila['Gramos_ML'] ?>" id="exampleInputEmail1" placeholder="Precio Publico">
 
                                                 <label for="exampleInputFile">Proveedor</label>
-                                            <input  type="text" name="provedor" class="form-control" value="<?php echo $var1 ?>" id="exampleInputEmail1" placeholder="Precio Publico">
+                                            <input  type="text" name="provedor" class="form-control" value="<?php echo $fila['provedor'] ?>" id="exampleInputEmail1" placeholder="Precio Publico">
 
                                             <label for="exampleInputFile">Estado del equipo</label>
-                                          
-                                               
-                                                <select  for="exampleInputEmail" class="form-control" name='estado'>
-     <option  value="nuevo">Nuevo</option>
-     <option value="usado">Usado</option>
-     <option value="reparado">Reparado</option>
-
-   </select>
+                                        
                                             
+                                                <select  for="exampleInputEmail" class="form-control" name='estado'>
+    <option  value="nuevo">Nuevo</option>
+    <option value="usado">Usado</option>
+    <option value="reparado">Reparado</option>
+
+</select>
+                                        
 
                                         </div>
-                                       
-                                     
+                                    
+                                    
                                         
                                     </div><!-- /.box-body -->
 
@@ -449,10 +446,13 @@ $x1=$_GET['codigo'];
                         if (isset($_POST['eliminar'])) {
                            
 
-
+if(isset($_POST["nombre"]))
 $nombre=strtoupper($_POST["nombre"]);
+if(isset($_POST["apellido"]))
 $apellido=strtoupper($_POST["apellido"]);
+if(isset($_POST["correo"]))
 $correo=strtoupper($_POST["correo"]);
+if(isset($_POST["ci"]))
 $ci=strtoupper($_POST["ci"]);
 
                        
@@ -523,7 +523,7 @@ $bd->consulta($sql);
 
 
                                         
-     $consulta="SELECT modelo, descripcion, marca,costo,p_publico,provedor,estado FROM productos where id_productos='$x1'";
+     $consulta="SELECT modelo, descripcion, marca,Codigo,Gramos_ML,provedor,estado FROM productos where id_productos='$x1'";
      $bd->consulta($consulta);
      while ($fila=$bd->mostrar_registros()) {
 
@@ -559,11 +559,11 @@ $bd->consulta($sql);
                                              <td>
                                            <?php echo $fila['marca'] ?></td>
 </tr><tr><td>
-                                            <h3>Costo</h3></td><td>
-                                           <?php echo $fila['costo'] ?></td>
+                                            <h3>Codigo</h3></td><td>
+                                           <?php echo $fila['Codigo'] ?></td>
 </tr><tr><td>
                                             <h3>Precio Publico</h3></td><td>
-                                           <?php echo $fila['p_publico'] ?></td>
+                                           <?php echo $fila['Gramos_ML'] ?></td>
                                            </tr><tr><td>
 
                                             <h3>Proveedor</h3></td><td>
@@ -638,7 +638,7 @@ $x1=$_GET['codigo'];
 
 
                                         
-     $consulta="SELECT modelo, descripcion, marca,costo,p_publico,provedor,estado FROM productos where id_productos='$x1'";
+     $consulta="SELECT modelo, descripcion, marca,Codigo,Gramos_ML,provedor,estado FROM productos where id_productos='$x1'";
      $bd->consulta($consulta);
      while ($fila=$bd->mostrar_registros()) {
 
@@ -674,11 +674,11 @@ $x1=$_GET['codigo'];
                                              <td>
                                            <?php echo $fila['marca'] ?></td>
 </tr><tr><td>
-                                            <h3>Costo</h3></td><td>
-                                           <?php echo $fila['costo'] ?></td>
+                                            <h3>Codigo</h3></td><td>
+                                           <?php echo $fila['Codigo'] ?></td>
 </tr><tr><td>
                                             <h3>Precio Publico</h3></td><td>
-                                           <?php echo $fila['p_publico'] ?></td>
+                                           <?php echo $fila['Gramos_ML'] ?></td>
                                            </tr><tr><td>
 
                                             <h3>Proveedor</h3></td><td>

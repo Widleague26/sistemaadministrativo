@@ -12,7 +12,7 @@ $fecha2=date("Y-m-d  H:i:s");
 	
    
    if (isset($_GET['diario'])) { 
-
+if(isset($_GET['codigo']))
     $x1=$_GET['codigo'];
 
                         if (isset($_POST['diario'])) {
@@ -58,6 +58,7 @@ $fecha2=date("Y-m-d  H:i:s");
 
                                         $bd->consulta($consulta);
                                         while ($fila=$bd->mostrar_registros()) {
+                                            if(isset($fila['status']))
                                             switch ($fila['status']) {
                                                 case 1:
                                                     $btn_st = "danger";
@@ -164,15 +165,15 @@ $fecha2=date("Y-m-d  H:i:s");
 
 //control semanal     
 
-  if (isset($_GET['semanal'])) { 
-
+if (isset($_GET['semanal'])) { 
+    if(isset($_GET['codigo']))
     $x1=$_GET['codigo'];
 
                         if (isset($_POST['semanal'])) {
 
 }
 ?>
-  
+
                             
                     <div class="row">
                         <div class="col-xs-9">
@@ -185,15 +186,15 @@ $fecha2=date("Y-m-d  H:i:s");
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                               
+                                            
                                                 <th>Descripcion</th>
                                                 <th>Modelo</th>
                                                 <th>Marca</th>
                                                 <th>tipo de movimiento</th>
-                                               <th>fecha</th>
+                                            <th>fecha</th>
                                                 <th>Cantidad</th>
                                                 <th>Encargado</th>
-                                               
+                                            
                                                 <th>Estado</th>
 
                                             </tr>
@@ -211,7 +212,8 @@ $fecha2=date("Y-m-d  H:i:s");
 
                                         $bd->consulta($consulta);
                                         while ($fila=$bd->mostrar_registros()) {
-                                            switch ($fila['status']) {
+                                            if(isset($fila['codigo']))
+                                            switch ($fila['codigo']) {
                                                 case 1:
                                                     $btn_st = "danger";
                                                     $txtFuncion = "Desactivar";
@@ -319,7 +321,7 @@ $fecha2=date("Y-m-d  H:i:s");
 //control semanal     
 
   if (isset($_GET['mensual'])) { 
-
+IF(isset($_GET['codigo']))
     $x1=$_GET['codigo'];
 
                         if (isset($_POST['mensual'])) {
@@ -365,6 +367,7 @@ $fecha2=date("Y-m-d  H:i:s");
 
                                         $bd->consulta($consulta);
                                         while ($fila=$bd->mostrar_registros()) {
+                                            if(isset($fila['status']))
                                             switch ($fila['status']) {
                                                 case 1:
                                                     $btn_st = "danger";
@@ -470,7 +473,7 @@ $fecha2=date("Y-m-d  H:i:s");
 }
 
   if (isset($_GET['total'])) { 
-
+    if(isset($_GET['codigo']))
     $x1=$_GET['codigo'];
 
                         if (isset($_POST['total'])) {
@@ -516,6 +519,7 @@ $fecha2=date("Y-m-d  H:i:s");
 
                                         $bd->consulta($consulta);
                                         while ($fila=$bd->mostrar_registros()) {
+                                            if(isset($fila['status']))
                                             switch ($fila['status']) {
                                                 case 1:
                                                     $btn_st = "danger";

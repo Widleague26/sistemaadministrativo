@@ -10,17 +10,12 @@ $fecha2=date("Y-m-d  H:i:s");
 
 
 
-	
-   
-   if (isset($_GET['cargos'])) { 
-
-    $x1=$_GET['codigo'];
-
-                        if (isset($_POST['cargos'])) {
-
+    if (isset($_GET['cargos'])) {
+    if (isset($_POST['cargos'])) {
+        
 }
 ?>
-  
+
                             
                     <div class="row">
                         <div class="col-xs-9">
@@ -49,9 +44,10 @@ $fecha2=date("Y-m-d  H:i:s");
                                         <?php
                                             if($tipo2==1){
                                         
-                                        $consulta="SELECT id_productos,p_publico, descripcion, modelo, marca, estado, cantidad FROM productos ORDER BY id_productos ASC ";
+                                        $consulta="SELECT id_productos,Gramos_ML, descripcion, modelo, marca, estado, cantidad FROM productos ORDER BY id_productos ASC ";
                                         $bd->consulta($consulta);
                                         while ($fila=$bd->mostrar_registros()) {
+                                            if(isset($fila['status']))
                                             switch ($fila['status']) {
                                                 case 1:
                                                     $btn_st = "danger";
@@ -78,15 +74,15 @@ $fecha2=date("Y-m-d  H:i:s");
                                                             $fila[estado]
                                                         </td>
                                                          <td>
-                                                            $fila[p_publico]
+                                                            $fila[Gramos_ML]
                                                         </td>
                                                          <td>";
-                                                         if( $fila[cantidad]==0){
+                                                         if( $fila['cantidad']==0){
                                                           echo 0;
                                                          }else{
 
                                                           
-                                                           echo  $fila[cantidad];
+                                                           echo  $fila['cantidad'];
 
                                                          }
 
@@ -182,7 +178,7 @@ $x1=$_GET['codigo'];
                            
  $cantidad=strtoupper($_POST["cantidad"]);
 
-                       
+      $can= '' ;                 
 if( $x1=="" & $can=="" )
                 {
                 
@@ -232,7 +228,7 @@ $bd->consulta($sql3);
 
 
                                         
-     $consulta="SELECT modelo, descripcion, marca,costo,p_publico,provedor,estado,cantidad FROM productos where id_productos='$x1'";
+     $consulta="SELECT modelo, descripcion, marca,Codigo,Gramos_ML,provedor,estado,cantidad FROM productos where id_productos='$x1'";
      $bd->consulta($consulta);
      while ($fila=$bd->mostrar_registros()) {
 
@@ -266,39 +262,39 @@ $bd->consulta($sql3);
                                             <h3>Cantidad Actual</h3></td><td>
 
                                            <?php
-                                           if($fila[cantidad]==""){
+                                           if($fila['cantidad']==""){
                                             echo "0";
 
                                            }else{
-                                            echo  $fila[cantidad];
+                                            echo  $fila['cantidad'];
                                              }
                                             ?></td></tr>
                                             <tr><td>
                                             <h3> Modelo</h3>
-                                           <td> <?php echo $fila[modelo] ?></td><tr>
+                                           <td> <?php echo $fila['modelo'] ?></td><tr>
                                           <tr>
                                           <td>
                                             <h3>Descripcion</h3>
                                             </td><td>
-                                         <?php echo $fila[descripcion] ?></td>
+                                         <?php echo $fila['descripcion'] ?></td>
 </tr><tr><td>
                                              <h3>Marca</h3></td>
                                              <td>
-                                           <?php echo $fila[marca] ?></td>
+                                           <?php echo $fila['marca'] ?></td>
 </tr><tr><td>
-                                            <h3>Costo</h3></td><td>
-                                           <?php echo $fila[costo] ?></td>
+                                            <h3>Codigo</h3></td><td>
+                                           <?php echo $fila['Codigo'] ?></td>
 </tr><tr><td>
                                             <h3>Precio Publico</h3></td><td>
-                                           <?php echo $fila[p_publico] ?></td>
+                                           <?php echo $fila['Gramos_ML'] ?></td>
                                            </tr><tr><td>
 
                                             <h3>Proveedor</h3></td><td>
-                                            <?php echo  $fila[provedor] ?></td></tr> 
+                                            <?php echo  $fila['provedor'] ?></td></tr> 
                                             <tr><td>
 
                                             <h3>Estado del equipo</h3></td><td>
-                                           <?php echo  $fila[estado] ?></td></tr>
+                                           <?php echo  $fila['estado'] ?></td></tr>
 
                                                
                                                 </table>
@@ -414,7 +410,7 @@ $bd->consulta($sql3);
 
 
                                         
-     $consulta="SELECT modelo, descripcion, marca,costo,p_publico,provedor,estado,cantidad FROM productos where id_productos='$x1'";
+     $consulta="SELECT modelo, descripcion, marca,Codigo,Gramos_ML,provedor,estado,cantidad FROM productos where id_productos='$x1'";
      $bd->consulta($consulta);
      while ($fila=$bd->mostrar_registros()) {
 
@@ -437,7 +433,7 @@ $bd->consulta($sql3);
                                         <div class="form-group">
 
                                            
-                                            <center>
+                                        <center>
   <label for="exampleInputFile">CANTIDAD QUE VAS A DECARGAR</label>
                                             <input onkeydown="return enteros(this, event)" required type="text" name="cantidad" class="form-control" value="" id="exampleInputEmail1" placeholder="00000">
 
@@ -448,39 +444,39 @@ $bd->consulta($sql3);
                                             <h3>Cantidad Actual</h3></td><td>
 
                                            <?php
-                                           if($fila[cantidad]==""){
+                                           if($fila['cantidad']==""){
                                             echo "0";
 
                                            }else{
-                                            echo  $fila[cantidad];
+                                            echo  $fila['cantidad'];
                                              }
                                             ?></td></tr>
                                             <tr><td>
                                             <h3> Modelo</h3>
-                                           <td> <?php echo $fila[modelo] ?></td><tr>
+                                           <td> <?php echo $fila['modelo'] ?></td><tr>
                                           <tr>
                                           <td>
                                             <h3>Descripcion</h3>
                                             </td><td>
-                                         <?php echo $fila[descripcion] ?></td>
+                                         <?php echo $fila['descripcion'] ?></td>
 </tr><tr><td>
                                              <h3>Marca</h3></td>
                                              <td>
-                                           <?php echo $fila[marca] ?></td>
+                                           <?php echo $fila['marca'] ?></td>
 </tr><tr><td>
-                                            <h3>Costo</h3></td><td>
-                                           <?php echo $fila[costo] ?></td>
+                                            <h3>Codigo</h3></td><td>
+                                           <?php echo $fila['Codigo'] ?></td>
 </tr><tr><td>
-                                            <h3>Precio Publico</h3></td><td>
-                                           <?php echo $fila[p_publico] ?></td>
+                                            <h3>Gramos_ML</h3></td><td>
+                                           <?php echo $fila['Gramos_ML'] ?></td>
                                            </tr><tr><td>
 
                                             <h3>Proveedor</h3></td><td>
-                                            <?php echo  $fila[provedor] ?></td></tr> 
+                                            <?php echo  $fila['provedor'] ?></td></tr> 
                                             <tr><td>
 
-                                            <h3>Estado del equipo</h3></td><td>
-                                           <?php echo  $fila[estado] ?></td></tr>
+                                            <h3>Estado del farmaco</h3></td><td>
+                                           <?php echo  $fila['estado'] ?></td></tr>
 
                                                
                                                 </table>

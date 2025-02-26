@@ -75,7 +75,8 @@ $sql2="INSERT INTO `administrador` (`id`, `usuario`, `pass`, `nombre`, `apellido
 
 }
 ?>
-  <div class="col-md-10">
+                            
+                            <div class="col-md-10">
                             <!-- general form elements -->
                             <div class="box box-primary">
                                 <div class="box-header">
@@ -87,20 +88,23 @@ $sql2="INSERT INTO `administrador` (`id`, `usuario`, `pass`, `nombre`, `apellido
                                 <form role="form"  name="fe" action="?mod=registroadmin&nuevo=nuevo" method="post">
                                     <div class="box-body">
                                         <div class="form-group">
-                                           
-                                            
-                                            
-                                            
+                                        
+<?php                                           
+$var1 = 'usuario';
+$var2 = 'Nombre del admin';
+$var3 = 'Apellido del admin';
+$var4 = ''; 
+?>                            
                                             <label for="exampleInputFile">Nombre</label>
                                             <input  onkeypress="return caracteres(event)" onblur="this.value=this.value.toUpperCase();" type="text" required type="tex" name="nombre" class="form-control" value="<?php echo $var2 ?>" id="exampleInputEmail1" placeholder="Intoducir el Nombre">
                                             <label for="exampleInputFile">Apellido</label>
                                             <input  onkeypress="return caracteres(event)" onblur="this.value=this.value.toUpperCase();" required type="tex" name="apellido" class="form-control" value="<?php echo $var3 ?>" id="exampleInputEmail1" placeholder="Apellido">
 
-                                             <label for="exampleInputFile">Usuario</label>
-                                            <input    required type="tex" name="usuario" class="form-control" value="<?php echo $var3 ?>" id="exampleInputEmail1" placeholder="Usuario">
+                                            <label for="exampleInputFile">Usuario</label>
+                                            <input    required type="tex" name="usuario" class="form-control" value="<?php echo $var1 ?>" id="exampleInputEmail1" placeholder="Usuario">
 
                                             <label for="exampleInputFile">Clave</label>
-                                            <input   required type="password" name="pw" class="form-control" value="<?php echo $var3 ?>" id="exampleInputEmail1" placeholder="Contraseña">
+                                            <input   required type="password" name="pw" class="form-control" value="<?php echo $var4 ?>" id="exampleInputEmail1" placeholder="Contraseña">
 
 
                                         
@@ -119,12 +123,12 @@ $sql2="INSERT INTO `administrador` (`id`, `usuario`, `pass`, `nombre`, `apellido
     
 </select>
                                             
-                                 
-                                            
-  
+                            
+                                        
+
                                         </div>
-                                       
-                                     
+                                
+                                
                                         
                                     </div><!-- /.box-body -->
                                     <center>
@@ -143,7 +147,7 @@ $sql2="INSERT INTO `administrador` (`id`, `usuario`, `pass`, `nombre`, `apellido
 	
    
    if (isset($_GET['lista'])) { 
-
+    if(isset($_GET['codigo']))
     $x1=$_GET['codigo'];
 
                         if (isset($_POST['lista'])) {
@@ -184,7 +188,8 @@ $sql2="INSERT INTO `administrador` (`id`, `usuario`, `pass`, `nombre`, `apellido
                                         $consulta="SELECT id, nombre, apellido, correo, nive_usua FROM administrador ORDER BY id ASC ";
                                         $bd->consulta($consulta);
                                         while ($fila=$bd->mostrar_registros()) {
-                                            switch ($fila['status']) {
+                                            if (isset($fila['estatus']))
+                                            switch ($fila['estatus']) {
                                                 case 1:
                                                     $btn_st = "danger";
                                                     $txtFuncion = "Desactivar";
@@ -295,6 +300,7 @@ $nombre=strtoupper($_POST["nombre"]);
 $apellido=strtoupper($_POST["apellido"]);
 $correo=$_POST["correo"];
 $nivel=strtoupper($_POST["nivel"]);
+if(isset($_POST['pw']))
 $pass=$_POST["pw"];      
 $usuario=$_POST["usuario"];      
 

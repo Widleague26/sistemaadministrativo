@@ -24,7 +24,7 @@ $fechai=$fecha2;
 
 
 
-$sql="select * from `basecelulares`.`usuarios` where cedula='$ci'";
+$sql="select * from `farmacos`.`usuarios` where cedula='$ci'";
 
 
 $cs=mysql_query($sql,$cn);
@@ -46,7 +46,7 @@ if($var6>1){
                                echo '   </div>';
 }else{
 
-$sql = "INSERT INTO `basecelulares`.`usuarios` (`cedula`, `nombre`, `apellido`, `correo`, `fechai`) VALUES ('$ci', '$nombre', '$apellido', '$correo', '$fechai')";
+$sql = "INSERT INTO `farmacos`.`usuarios` (`cedula`, `nombre`, `apellido`, `correo`, `fechai`) VALUES ('$ci', '$nombre', '$apellido', '$correo', '$fechai')";
 
 
                           $cs=mysql_query($sql,$cn);
@@ -142,7 +142,7 @@ $fechai=$fecha2;
 
 
 
-$sql="select * from `basecelulares`.`usuarios` where cedula='$ci'";
+$sql="select * from `farmacos`.`usuarios` where cedula='$ci'";
 
 
 $cs=mysql_query($sql,$cn);
@@ -164,7 +164,7 @@ if($var6>1){
                                echo '   </div>';
 }else{
 
-$sql = "INSERT INTO `basecelulares`.`usuarios` (`cedula`, `nombre`, `apellido`, `correo`, `fechai`) VALUES ('$ci', '$nombre', '$apellido', '$correo', '$fechai')";
+$sql = "INSERT INTO `farmacos`.`usuarios` (`cedula`, `nombre`, `apellido`, `correo`, `fechai`) VALUES ('$ci', '$nombre', '$apellido', '$correo', '$fechai')";
 
 
                           $cs=mysql_query($sql,$cn);

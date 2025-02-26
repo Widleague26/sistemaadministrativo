@@ -1,5 +1,10 @@
   
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+?>
+
+<?php
  
      require ('validarnum.php');
 
@@ -13,7 +18,7 @@ $fecha2=date("Y-m-d  H:i:s");
   
    
    if (isset($_GET['cargos'])) { 
-
+    if(isset($_GET¨{'codigo'}))
     $x1=$_GET['codigo'];
 
                         if (isset($_POST['cargos'])) {
@@ -50,6 +55,7 @@ $fecha2=date("Y-m-d  H:i:s");
                                         $consulta="SELECT id_usuarios,nombre,cedula ,apellido, correo, telefono, direccion FROM usuarios ORDER BY id_usuarios ASC ";
                                         $bd->consulta($consulta);
                                         while ($fila=$bd->mostrar_registros()) {
+                                            if( isset($fila['status'])) {
                                             switch ($fila['status']) {
                                                 case 1:
                                                     $btn_st = "danger";
@@ -60,6 +66,7 @@ $fecha2=date("Y-m-d  H:i:s");
                                                     $btn_st = "primary";
                                                     $txtFuncion = "Activar";
                                                     break;
+                                            }
                                             }
                                              //echo '<li data-icon="delete"><a href="?mod=lugares?edit='.$fila['id_tipo'].'"><img src="images/lugares/'.$fila['imagen'].'" height="350" >'.$fila['nombre'].'</a><a href="?mod=lugares?borrar='.$fila['id_tipo'].'" data-position-to="window" >Borrar</a></li>';
                                              echo "<tr>
@@ -169,19 +176,19 @@ $fecha2=date("Y-m-d  H:i:s");
 <?php
 }
 
-     
+    
 
 
- 
-   if (isset($_GET['listataller'])) { 
 
+    if (isset($_GET['listataller'])) { 
+        if(isset($_GET['codigo']))
     $x1=$_GET['codigo'];
 
                         if (isset($_POST['listataller'])) {
 
 }
 ?>
-  
+
                             
                     <div class="row">
                         <div class="col-xs-9">
@@ -215,7 +222,8 @@ $fecha2=date("Y-m-d  H:i:s");
                                         /*$consulta="SELECT id_usuarios,nombre,cedula ,apellido, correo, telefono, direccion FROM usuarios ORDER BY id_usuarios ASC ";*/
                                         $bd->consulta($consulta);
                                         while ($fila=$bd->mostrar_registros()) {
-                                            switch ($fila['status']) {
+                                            if(isset ($fila['codigo']))
+                                            switch ($fila['codigo']) {
                                                 case 1:
                                                     $btn_st = "danger";
                                                     $txtFuncion = "Desactivar";
@@ -361,9 +369,9 @@ $x1=$_GET['codigo'];
   $falla=$_POST["falla"];
 
           
-
-
-if( $x1=="" & $can=="" )
+    $cam = "";
+    $cam = '';
+    if( $x1=="" && $can=="" )
                 {
                 
                     echo "
@@ -446,22 +454,22 @@ $bd->consulta($sql3);
                                            
                                             <tr><td>
                                             <h3> Nombre del cliente</h3>
-                                           <td> <?php echo $fila[nombre] ?></td><tr>
+                                           <td> <?php echo $fila['nombre'] ?></td><tr>
                                           <tr>
                                           <td>
                                             <h3>Apellido</h3>
                                             </td><td>
-                                         <?php echo $fila[apellido] ?></td>
+                                         <?php echo $fila['apellido'] ?></td>
 </tr><tr><td>
                                              <h3>Cedula</h3></td>
                                              <td>
-                                           <?php echo $fila[cedula] ?></td>
+                                           <?php echo $fila['cedula'] ?></td>
 </tr><tr><td>
                                             <h3>Telefono</h3></td><td>
-                                           <?php echo $fila[telefono] ?></td>
+                                           <?php echo $fila['telefono'] ?></td>
 </tr><tr><td>
                                             <h3>Direccion</h3></td><td>
-                                           <?php echo $fila[direccion] ?></td>
+                                           <?php echo $fila['direccion'] ?></td>
                                            </tr>
 
                                                
@@ -580,8 +588,8 @@ $bd->consulta($sql3);
  $x1=$_GET['codigo'];
 
                         if (isset($_POST['descargo'])) {
-                           
- $cantidad=strtoupper($_POST["cantidad"]);
+                        if (isset($_POST['cantidad']))
+$cantidad=strtoupper($_POST["cantidad"]);
 
                        
 if( $x1==""  )
@@ -603,7 +611,7 @@ if( $x1==""  )
 
 
 //insert de los datos a movimientos
-
+$cantidad = 10;
 $sql3="INSERT INTO movimientos ( cantidadm, fecha_movimiento, tipo_movimiento, admin,id_producto_m,motivo)VALUES
 ( '$cantidad', '$fecha2', 'SALIDA', '$admin','$x1','entrega')  ";
 
@@ -667,28 +675,28 @@ echo' <h3> <center><a href="?mod=registrotaller&listataller" class="alert-link">
                                             <h3>Cliente</h3></td><td>
 
                                            <?php
-                                          
-                                            echo  $fila[nombre];
+                                            
+                                            echo  $fila['nombre'];
                                            ?>
                                            </td></tr>
                                             <tr><td>
                                             <h3> Modelo</h3>
-                                           <td> <?php echo $fila[modelo] ?></td><tr>
+                                           <td> <?php echo $fila['modelo'] ?></td><tr>
                                           <tr>
                                           <td>
                                             <h3>Descripcion</h3>
                                             </td><td>
-                                         <?php echo $fila[descripcion_p] ?></td>
+                                         <?php echo $fila['descripcion_p'] ?></td>
 </tr><tr><td>
                                              <h3>Marca</h3></td>
                                              <td>
-                                           <?php echo $fila[marca] ?></td>
+                                           <?php echo $fila['marca'] ?></td>
 </tr><tr><td>
                                             <h3>N° Serie</h3></td><td>
-                                           <?php echo $fila[n_serie] ?></td>
+                                           <?php echo $fila['n_serie'] ?></td>
 </tr><tr><td>
                                             <h3>falla</h3></td><td>
-                                           <?php echo $fila[falla] ?></td>
+                                           <?php echo $fila['falla'] ?></td>
                                            </tr>
 
                                       

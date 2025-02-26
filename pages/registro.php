@@ -1,615 +1,342 @@
-	
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-		 require ('validarnum.php');
+require('validarnum.php'); // Asegúrate de incluir correctamente este archivo
 
-$fecha2=date("Y-m-d");  	
+$fecha2 = date("Y-m-d");
 
-if (isset($_GET['nuevo'])) { 
+// ==========================================================
+// SECCIÓN: Agregar Nuevo Usuario
+// ==========================================================
+if (isset($_GET['nuevo'])) {
+    if (isset($_POST['lugarguardar'])) {
+        // Recoger y sanitizar datos del formulario
+        $nombre = strtoupper(trim($_POST["nombre"]));
+        $apellido = strtoupper(trim($_POST["apellido"]));
+        $correo = strtoupper(trim($_POST["correo"]));
+        $ci = strtoupper(trim($_POST["ci"]));
+        $direccion = strtoupper(trim($_POST["direccion"]));
+        $telefono = strtoupper(trim($_POST["telefono"]));
+        $fechai = $fecha2;
 
-                        if (isset($_POST['lugarguardar'])) {
-                           
+        // Verificar si la cédula ya existe
+        $sql = "SELECT * FROM `usuarios` WHERE cedula='$ci'";
+        $cs = $bd->consulta($sql);
 
+        if ($bd->numero_filas($cs) != 0) {
+            echo '<div class="alert alert-danger alert-dismissable">
+                    <i class="fa fa-check"></i>
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <b>Alerta:</b> no se registró este usuario. Ya existe...
+                </div>';
+        } else {
+            // Insertar nuevo usuario
+            $sql = "INSERT INTO `usuarios` (`cedula`, `nombre`, `apellido`, `correo`, `fechai`, `telefono`, `direccion`) 
+                    VALUES ('$ci', '$nombre', '$apellido', '$correo', '$fechai', '$telefono', '$direccion')";
 
+            if ($bd->consulta($sql)) {
+                echo '<div class="alert alert-success alert-dismissable">
+                        <i class="fa fa-check"></i>
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <b>Bien!</b> Datos guardados correctamente...
+                    </div>';
+            } else {
+                echo '<div class="alert alert-danger alert-dismissable">
+                        <i class="fa fa-check"></i>
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <b>Error:</b> No se pudieron guardar los datos. ' . $bd->obtenerError() . '
+                    </div>';
+            }
+        }
+    }
 
+    // Formulario para agregar nuevos usuarios
+    ?>
+    <div class="col-md-10">
+        <div class="box box-primary">
+            <div class="box-header">
+                <h3 class="box-title">Clientes</h3>
+            </div>
+            <form role="form" name="fe" action="?mod=registro&nuevo=nuevo" method="post">
+                <div class="box-body">
+                    <div class="form-group">
+                        <label for="exampleInputFile">Nombre</label>
+                        <input onkeypress="return caracteres(event)" onblur="this.value=this.value.toUpperCase();" type="text" required name="nombre" class="form-control" placeholder="Introducir el Nombre">
 
+                        <label for="exampleInputFile">Apellido</label>
+                        <input onkeypress="return caracteres(event)" onblur="this.value=this.value.toUpperCase();" required name="apellido" class="form-control" placeholder="Apellido">
 
-$nombre=strtoupper($_POST["nombre"]);
-$apellido=strtoupper($_POST["apellido"]);
-$correo=strtoupper($_POST["correo"]);
-$ci=strtoupper($_POST["ci"]);
-$direccion=strtoupper($_POST["direccion"]);
-$telefono=strtoupper($_POST["telefono"]);
-$fechai=$fecha2;
-                       
+                        <label for="exampleInputFile">Cédula</label>
+                        <input onkeydown="return enteros(this, event)" required type="text" name="ci" class="form-control" placeholder="Cédula">
 
+                        <label for="exampleInputFile">Teléfono</label>
+                        <input onkeydown="return enteros(this, event)" required type="text" name="telefono" class="form-control" placeholder="Teléfono">
 
+                        <label for="exampleInputFile">Dirección</label>
+                        <input required type="text" name="direccion" class="form-control" placeholder="Dirección">
 
+                        <label for="exampleInputFile">Correo</label>
+                        <input required type="email" name="correo" class="form-control" placeholder="Correo">
+                    </div>
+                </div><!-- /.box-body -->
 
-$sql="select * from `usuarios` where cedula='$ci'";
-
-$cs=$bd->consulta($sql);
-
-if($bd->numeroFilas($cs)!=0){
-
-/*
-$cs=mysql_query($sql,$cn);
-while($resul=mysql_fetch_array($cs)){
-	$var6=$resul[0];
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-primary btn-lg" name="lugarguardar" id="lugarguardar" value="Guardar">Agregar</button>
+                </div>
+            </form>
+        </div><!-- /.box -->
+    </div>
+    <?php
 }
-//CONSULTAR SI EL CAMPO YA EXISTE
-*/
 
-	  echo '<div class="alert alert-danger alert-dismissable">
-                                        <i class="fa fa-check"></i>
-                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                        <b>Alerta no se registro este usuario </b> Ya Existe... ';
-
-
-
-                               echo '   </div>';
-}else{
-
-$sql = "INSERT INTO `usuarios` (`cedula`, `nombre`, `apellido`, `correo`, `fechai`, `telefono`, `direccion`) VALUES ('$ci', '$nombre', '$apellido', '$correo', '$fechai', '$telefono', '$direccion')";
-
-                            
-                          $cs=$bd->consulta($sql);  
-                         // $cs=mysql_query($sql,$cn);
-
-                           
-
-
-            
-
-                            //echo "Datos Guardados Correctamente";
-                            echo '<div class="alert alert-success alert-dismissable">
-                                        <i class="fa fa-check"></i>
-                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                        <b>Bien!</b> Datos Guardados Correctamente... ';
-
-
-
-echo "
-Nombre: $nombre
-
-";
-                               echo '   </div>';
-                           
-							
+// ==========================================================
+// SECCIÓN: Listar Usuarios
+// ==========================================================
+if (isset($_GET['lista'])) {
+    $consulta = "SELECT cedula, nombre, apellido, correo, id_usuarios FROM usuarios ORDER BY cedula ASC";
+    $bd->consulta($consulta);
+    ?>
+    <div class="row">
+        <div class="col-xs-8">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Lista Clientes:</h3>                                    
+                </div><!-- /.box-header -->
+                <div class="box-body table-responsive">
+                    <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Cédula</th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Correo</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        while ($fila = $bd->mostrar_registros()) {
+                            echo "<tr>
+                                    <td>{$fila['cedula']}</td>
+                                    <td>{$fila['nombre']}</td>
+                                    <td>{$fila['apellido']}</td>
+                                    <td>{$fila['correo']}</td>
+                                    <td>
+                                        <center>
+                                            <a href=?mod=registro&consultar&codigo={$fila['id_usuarios']}><img src='./img/consul.png' width='25' alt='Consultar' title='Consultar'></a>
+                                            <a href=?mod=registro&editar&codigo={$fila['id_usuarios']}><img src='./img/editar.png' width='25' alt='Editar' title='Editar'></a>
+                                            <a href=?mod=registro&eliminar&codigo={$fila['id_usuarios']}><img src='./img/elimina.png' width='25' alt='Eliminar' title='Eliminar'></a>
+                                        </center>
+                                    </td>
+                                </tr>";
                         }
-
-
-
-}
-?>
-  <div class="col-md-10">
-                            <!-- general form elements -->
-                            <div class="box box-primary">
-                                <div class="box-header">
-                                    <h3 class="box-title">Clientes</h3>
-                                </div>
-                                
-                            
-                                <!-- form start -->
-                                <form role="form"  name="fe" action="?mod=registro&nuevo=nuevo" method="post">
-                                    <div class="box-body">
-                                        <div class="form-group">
-                                           
-                                            
-                                            
-                                            
-    
-
-
-
-<?php
-$var1 = '12345678';
-$var2 = 'Nombre Inicial';
-$var3 = 'Apellido Inicial';
-$var4 = 'correo@gmail.com'; 
-$var5 = 'Ubicacion' ; 
-$var6 = '04241155689' ; 
-// Otros códigos PHP...
-?>
-
-<label for="exampleInputFile">Nombre</label>
-<input onkeypress="return caracteres(event)" onblur="this.value=this.value.toUpperCase();" type="text" required name="nombre" class="form-control" value="<?php echo $var2; ?>" id="exampleInputEmail1" placeholder="Introducir el Nombre">
-
-<label for="exampleInputFile">Apellido</label>
-<input onkeypress="return caracteres(event)" onblur="this.value=this.value.toUpperCase();" required name="apellido" class="form-control" value="<?php echo $var3; ?>" id="exampleInputEmail1" placeholder="Apellido">
-
-<label for="exampleInputFile">Cédula</label>
-<input onkeydown="return enteros(this, event)" required type="text" name="ci" class="form-control" value="<?php echo $var1; ?>" id="exampleInputEmail1" placeholder="Cédula">
-
-<label for="exampleInputFile">Teléfono</label>
-<input onkeydown="return enteros(this, event)" required type="text" name="telefono" class="form-control" value="<?php echo $var6; ?>" id="exampleInputEmail1" placeholder="Teléfono">
-
-<label for="exampleInputFile">Dirección</label>
-<input required type="text" name="direccion" class="form-control" value="<?php echo $var5; ?>" id="exampleInputEmail1" placeholder="Dirección">
-
-<label for="exampleInputFile">Correo</label>
-<input required type="email" name="correo" class="form-control" value="<?php echo $var4; ?>" placeholder="Correo">
-
-
-                                            
-                                                
-    
-                                            </div>
-                                        
-                                        
-                                        
-                                    </div><!-- /.box-body -->
-
-                                    <div class="box-footer">
-                                        <button type="submit" class="btn btn-primary btn-lg" name="lugarguardar" id="lugarguardar" value="Guardar">Agregar</button>
-                                        
-                                    
-                                    </div>
-                                </form>
-                            </div><!-- /.box -->
-<?php
+                        ?>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Cédula</th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Correo</th>
+                                <th>Acción</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div>
+    </div>
+    <?php
 }
 
-	
-   
-   if (isset($_GET['lista'])) { 
+// ==========================================================
+// SECCIÓN: Consultar Usuario
+// ==========================================================
+if (isset($_GET['consultar'])) {
+    $codigo = $_GET['codigo'];
+    $consulta = "SELECT * FROM usuarios WHERE id_usuarios='$codigo'";
+    $bd->consulta($consulta);
 
-    if (isset($_GET['codigo'])) {
-    $x1 = $_GET['codigo'];
-} else {
-    $x1 = ''; // Define un valor predeterminado o maneja el caso en el que 'codigo' no esté presente
-}
-
-                        if (isset($_POST['lista'])) {
-                           
-
-
-
+    while ($fila = $bd->mostrar_registros()) {
         
-
+        ?>
+        <div class="col-md-10">
+            <div class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title">Consultar Usuario</h3>
+                </div>
+                <div class="box-body">
+                    <div class="form-group">
+                        <label>Cédula:</label>
+                        <p><?php echo $fila['cedula']; ?></p>
+                        <label>Nombre:</label>
+                        <p><?php echo $fila['nombre']; ?></p>
+                        <label>Apellido:</label>
+                        <p><?php echo $fila['apellido']; ?></p>
+                        <label>Correo:</label>
+                        <p><?php echo $fila['correo']; ?></p>
+                        <label>Teléfono:</label>
+                        <p><?php echo $fila['telefono']; ?></p>
+                        <label>Dirección:</label>
+                        <p><?php echo $fila['direccion']; ?></p>
+                        <label>Fecha de Registro:</label>
+                        <p><?php echo $fila['fechai']; ?></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
 }
-?>
-  
-                            
-                    <div class="row">
-                        <div class="col-xs-8">
-                            
-                            <div class="box">
-                                <div class="box-header">
-                                    <h3 class="box-title">Lista Clientes:</h3>                                    
-                                </div><!-- /.box-header -->
-                                <div class="box-body table-responsive">
-                                    <table id="example1" class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Cedula</th>
-                                                <th>Nombre</th>
-                                                <th>Apellido</th>
-                                                <th>correo</th>
-                                                <th>Acción</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php
-                                            if($tipo2==1){
-                                        
-                                        $consulta="SELECT cedula, nombre, apellido, correo,id_usuarios FROM usuarios ORDER BY cedula ASC ";
-                                        $bd->consulta($consulta);
-                                        while ($fila=$bd->mostrar_registros()) {
-                                            switch ($fila['status']) {
-                                                case 1:
-                                                    $btn_st = "danger";
-                                                    $txtFuncion = "Desactivar";
-                                                    break;
-                                                
-                                                case 0:
-                                                    $btn_st = "primary";
-                                                    $txtFuncion = "Activar";
-                                                    break;
-                                            }
-                                             //echo '<li data-icon="delete"><a href="?mod=lugares?edit='.$fila['id_tipo'].'"><img src="images/lugares/'.$fila['imagen'].'" height="350" >'.$fila['nombre'].'</a><a href="?mod=lugares?borrar='.$fila['id_tipo'].'" data-position-to="window" >Borrar</a></li>';
-                                             echo "<tr>
-                                                        <td>
-                                                           
-                                                              $fila[cedula]
-                                                            
-                                                        </td>
-                                                        <td> $fila[nombre]                                                        </td>
-                                                        <td>
-                                                            $fila[apellido]
-                                                        </td>
-                                                         <td>
-                                                            $fila[correo]
-                                                        </td>
-                                                         <td><center>
-                                                            <a  href=?mod=registro&editar&codigo=".$fila["id_usuarios"]."><img src='./img/consul.png' width='25' alt='Edicion' title=' CONSULTAR ".$fila["nombre"]."'></a>";
-      
-                                echo "
-      
-      <a  href=?mod=registro&editar&codigo=".$fila["id_usuarios"]."><img src='./img/editar.png' width='25' alt='Edicion' title='EDITAR LOS DATOS DE ".$fila["nombre"]."'></a> 
-      <a   href=?mod=registro&eliminar&codigo=".$fila["id_usuarios"]."><img src='./img/elimina.png'  width='25' alt='Edicion' title='ELIMINAR A   ".$fila["nombre"]."'></a>
-      ";}
-      echo "
-      
-    
-      
-     </center>
-                                                        </td>
-                                                    </tr>";
-                                        
-                                        }
-                                        
-                                        
-                                        else {
-                                        
-                                           $consulta="SELECT cedula, nombre, apellido, correo,id_usuarios FROM usuarios ORDER BY cedula ASC ";
-                                        $bd->consulta($consulta);
-                                        while ($fila=$bd->mostrar_registros()) {
-                                            switch ($fila['status']) {
-                                                case 1:
-                                                    $btn_st = "danger";
-                                                    $txtFuncion = "Desactivar";
-                                                    break;
-                                                
-                                                case 0:
-                                                    $btn_st = "primary";
-                                                    $txtFuncion = "Activar";
-                                                    break;
-                                            }
-                                             //echo '<li data-icon="delete"><a href="?mod=lugares?edit='.$fila['id_tipo'].'"><img src="images/lugares/'.$fila['imagen'].'" height="350" >'.$fila['nombre'].'</a><a href="?mod=lugares?borrar='.$fila['id_tipo'].'" data-position-to="window" >Borrar</a></li>';
-                                             echo "<tr>
-                                                        <td>
-                                                           
-                                                              $fila[cedula]
-                                                            
-                                                        </td>
-                                                        <td> $fila[nombre]                                                        </td>
-                                                        <td>
-                                                            $fila[apellido]
-                                                        </td>
-                                                         <td>
-                                                            $fila[correo]
-                                                        </td>
-                                                         <td>
-                                                            <a  href=prestacion2.php?codigo=".$fila["cedula"]."><img src='./img/consul.png' width='25' alt='Edicion' title=' CONSULTAR ".$fila["nombre"]."'></a>";
-      
-                             
-      echo "
-      
-      <a target='_blank'  href=./pdf/.php?codigo=".$fila["cedula"]."><img src='./img/impresora.png'  width='25' alt='Edicion' title='Imprimir reporte de prestaciones de  ".$fila["nombre"]."'></a>
-      
-     
-                                                        </td>
-                                                    </tr>";
-                                        }
-                                        
-                                        } ?>                                            
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                              <th>Cedula</th>
-                                                <th>Nombre</th>
-                                                <th>Apellido</th>
-                                                <th>correo</th>
-                                                <th>Acción</th>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div><!-- /.box-body -->
-                            </div><!-- /.box -->
+
+// ==========================================================
+// SECCIÓN: Editar Usuario
+// ==========================================================
+if (isset($_GET['editar'])) {
+    $codigo = $_GET['codigo'];
+    $consulta = "SELECT * FROM usuarios WHERE id_usuarios='$codigo'";
+    $bd->consulta($consulta);
+
+    while ($fila = $bd->mostrar_registros()) {
+        ?>
+        <div class="col-md-10">
+            <div class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title">Editar Usuario</h3>
+                </div>
+                <form role="form" name="fe" action="?mod=registro&editar&codigo=<?php echo $fila['id_usuarios']; ?>" method="post">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="exampleInputFile">Nombre</label>
+                            <input onkeypress="return caracteres(event)" onblur="this.value=this.value.toUpperCase();" type="text" required name="nombre" class="form-control" value="<?php echo $fila['nombre']; ?>">
+
+                            <label for="exampleInputFile">Apellido</label>
+                            <input onkeypress="return caracteres(event)" onblur="this.value=this.value.toUpperCase();" required name="apellido" class="form-control" value="<?php echo $fila['apellido']; ?>">
+
+                            <label for="exampleInputFile">Cédula</label>
+                            <input onkeydown="return enteros(this, event)" required type="text" name="ci" class="form-control" value="<?php echo $fila['cedula']; ?>" readonly>
+
+                            <label for="exampleInputFile">Teléfono</label>
+                            <input onkeydown="return enteros(this, event)" required type="text" name="telefono" class="form-control" value="<?php echo $fila['telefono']; ?>">
+
+                            <label for="exampleInputFile">Dirección</label>
+                            <input required type="text" name="direccion" class="form-control" value="<?php echo $fila['direccion']; ?>">
+
+                            <label for="exampleInputFile">Correo</label>
+                            <input required type="email" name="correo" class="form-control" value="<?php echo $fila['correo']; ?>">
                         </div>
-                    
-              
+                    </div><!-- /.box-body -->
 
-                          
-                            <?php
- if($tipo2==1){
-                                echo '
-  <div class="col-md-3">
-  <div class="box">
-                                <div class="box-header">
-                                <div class="box-header">
-                                    <h3> <center>Agregar Clientes <a href="#" class="alert-link">Nuevos</a></center></h3>                                    
-                                </div>
-                        <center>        
-                            <form  name="fe" action="?mod=registro&nuevo" method="post" id="ContactForm">
-    
-
-
- <input title="AGREGAR UN NUEVO EMPLEADO" name="btn1"  class="btn btn-primary"type="submit" value="Agregar Nuevo">
-
-    
-  </form>
-  </center>
-                                </div>
-                            </div>
-                            </div>  '; } ?>
-                        </br>       
-                                
-  <div class="col-md-3">
-  <div class="box">
-                                <div class="box-header">
-                                <center>
-                                <div class="box-header">
-                                   <h3> <center>Imprimir Lista De Clientes</a></center></h3>                                    
-                                </div>
-                                
-                                
-                                 <a target='_blank'  href=./pdf/listaclientes.php><img src='./img/impresora.png'  width='50' alt='Edicion' title='Imprimir lista de Registro De empleados'></a>
-                                </center>
-                                </div>
-                                </div>
-                                </div>
-
-<?php
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn-primary btn-lg" name="actualizar" value="Actualizar">Actualizar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <?php
+    }
 }
 
-     
+// Manejo de la actualización del usuario
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['actualizar'])) {
+    $codigo = $_GET['codigo'];
 
-     if (isset($_GET['editar'])) { 
+    // Recoger los datos del formulario
+    $nombre = strtoupper(trim($_POST["nombre"]));
+    $apellido = strtoupper(trim($_POST["apellido"]));
+    $correo = strtoupper(trim($_POST["correo"]));
+    $telefono = strtoupper(trim($_POST["telefono"]));
+    $direccion = strtoupper(trim($_POST["direccion"]));
 
-//codigo que viene de la lista
-$x1=$_GET['codigo'];
-                        if (isset($_POST['editar'])) {
-                           
+    // Construir la consulta UPDATE
+    $sql = "UPDATE `usuarios` SET 
+                nombre = '$nombre',
+                apellido = '$apellido',
+                correo = '$correo',
+                telefono = '$telefono',
+                direccion = '$direccion'
+            WHERE id_usuarios = '$codigo'";
 
-
-
-
-
-$nombre=strtoupper($_POST["nombre"]);
-$apellido=strtoupper($_POST["apellido"]);
-$correo=strtoupper($_POST["correo"]);
-$ci=strtoupper($_POST["ci"]);
-$telefono=strtoupper($_POST["telefono"]);
-$direccion=strtoupper($_POST["direccion"]);
-
-                       
-if( $nombre=="" )
-                {
-                
-                    echo "
-   <script> alert('campos vacios')</script>
-   ";
-                    echo "<br>";
-                    
-                }
-        else
-           {
-$sql=" UPDATE usuarios SET 
-nombre='$nombre' ,
-apellido='$apellido' ,
-cedula='$ci' ,
-telefono='$telefono' ,
-direccion='$direccion' ,
-correo='$correo' 
- where id_usuarios='$x1'";
-
-
-$bd->consulta($sql);
-                          
-
-   
-                            //echo "Datos Guardados Correctamente";
-                            echo '<div class="alert alert-success alert-dismissable">
-                                        <i class="fa fa-check"></i>
-                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                        <b>Bien!</b> Datos Editados Correctamente... ';
-
-
-
-echo "
-Nombre: '$nombre',
-apellido='$apellido' ,
-cedula='$ci' ,
-correo='$correo',
-telefono='$telefono',
-direccion='$direccion',
-id_usuarios='$x1'
-";
-                               echo '   </div>';
-                           
-                            
-                        
-
-
-
+    // Ejecutar la consulta
+    if ($bd->consulta($sql)) {
+        echo '<div class="alert alert-success alert-dismissable">
+                <i class="fa fa-check"></i>
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <b>Bien!</b> Datos actualizados correctamente...
+            </div>';
+    } else {
+        echo '<div class="alert alert-danger alert-dismissable">
+                <i class="fa fa-check"></i>
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <b>Error:</b> No se pudieron actualizar los datos. ' . $bd->obtenerError() . '
+            </div>';
+    }
 }
-   
-}
+// ==========================================================
+// SECCIÓN: Eliminar Usuario
+// ==========================================================
+if (isset($_GET['eliminar'])) {
+    $codigo = $_GET['codigo'];
+    $consulta = "SELECT * FROM usuarios WHERE id_usuarios='$codigo'";
+    $bd->consulta($consulta);
 
-
-                                        
-     $consulta="SELECT cedula, nombre, apellido, correo,telefono,direccion FROM usuarios where id_usuarios='$x1'";
-     $bd->consulta($consulta);
-     while ($fila=$bd->mostrar_registros()) {
-
-
-
-?>
-  <div class="col-md-10">
-                            <!-- general form elements -->
-                            <div class="box box-primary">
-                                <div class="box-header">
-                                    <h3 class="box-title">Editar Empleados</h3>
-                                </div>
-                                
-                            
-        <?php  echo '  <form role="form"  name="fe" action="?mod=registro&editar=editar&codigo='.$x1.'" method="post">';
+    while ($fila = $bd->mostrar_registros()) {
         ?>
-                                    <div class="box-body">
-                                        <div class="form-group">
-                                           
-                                            
-                                            
-                                            
-                                            <label for="exampleInputFile">Nombre</label>
-                                            <input  onkeypress="return caracteres(event)" onblur="this.value=this.value.toUpperCase();" type="text" required type="tex" name="nombre" class="form-control" value="<?php echo  $fila[nombre] ?>" id="exampleInputEmail1" placeholder="Intoducir el Nombre">
-                                            <label for="exampleInputFile">Apellido</label>
-                                            <input  onkeypress="return caracteres(event)" onblur="this.value=this.value.toUpperCase();" required type="tex" name="apellido" class="form-control" value="<?php echo  $fila[apellido] ?>" id="exampleInputEmail1" placeholder="Apellido">
-                                            <label for="exampleInputFile">cedula</label>
-                                            <input onkeydown="return enteros(this, event)" required type="text" name="ci" class="form-control" value="<?php echo $fila[cedula] ?>" id="exampleInputEmail1" placeholder="Cedula">
-    <label for="exampleInputFile">telefono</label>
-                                            <input onkeydown="return enteros(this, event)" required type="text" name="telefono" class="form-control" value="<?php echo $fila[telefono] ?>" id="exampleInputEmail1" placeholder="telefono">
-
-                                             <label for="exampleInputFile">Direccion</label>
-                                            <input  required type="tex" name="direccion" class="form-control" value="<?php echo $fila[direccion] ?>" id="exampleInputEmail1" placeholder="direccion">
-
-                                            <label for="exampleInputFile">correo</label>
-                                            <input  required type="email" name="correo" class="form-control" value="<?php echo $fila[correo] ?>"  placeholder="Correo">
-                                            
-                                           
-                                            
-  
-                                        </div>
-                                       
-                                     
-                                        
-                                    </div><!-- /.box-body -->
-
-                                    <div class="box-footer">
-                                        <button type="submit" class="btn btn-primary btn-lg" name="editar" id="editar" value="Editar">Editar</button>
-                                        
-                                    
-                                    </div>
-                                </form>
-                            </div><!-- /.box -->
-<?php
-
-
-}
+        <div class="col-md-10">
+            <div class="box box-danger">
+                <div class="box-header">
+                    <h3 class="box-title">Eliminar Usuario</h3>
+                </div>
+                <div class="box-body">
+                    <p>¿Está seguro de que desea eliminar al siguiente usuario?</p>
+                    <div class="form-group">
+                        <label>Cédula:</label>
+                        <p><?php echo $fila['cedula']; ?></p>
+                        <label>Nombre:</label>
+                        <p><?php echo $fila['nombre']; ?></p>
+                        <label>Apellido:</label>
+                        <p><?php echo $fila['apellido']; ?></p>
+                        <label>Correo:</label>
+                        <p><?php echo $fila['correo']; ?></p>
+                        <label>Teléfono:</label>
+                        <p><?php echo $fila['telefono']; ?></p>
+                        <label>Dirección:</label>
+                        <p><?php echo $fila['direccion']; ?></p>
+                    </div>
+                    <form action="?mod=registro&eliminar&codigo=<?php echo $fila['id_usuarios']; ?>" method="post">
+                        <button type="submit" class="btn btn-danger" name="confirmar_eliminar" value="Eliminar">Eliminar</button>
+                        <a href="?mod=registro&lista" class="btn btn-default">Cancelar</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
 }
 
- //eliminar
+// ==========================================================
+// SECCIÓN: Procesar la Eliminación del Usuario
+// ==========================================================
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_GET['eliminar']) && isset($_POST['confirmar_eliminar'])) {
+    $codigo = $_GET['codigo'];
 
-     if (isset($_GET['eliminar'])) { 
+    // Construir la consulta DELETE
+    $sql = "DELETE FROM `usuarios` WHERE id_usuarios = '$codigo'";
 
-//codigo que viene de la lista
-$x1=$_GET['codigo'];
-                        if (isset($_POST['eliminar'])) {
-                           
-
-
-$nombre=strtoupper($_POST["nombre"]);
-$apellido=strtoupper($_POST["apellido"]);
-$correo=strtoupper($_POST["correo"]);
-$ci=strtoupper($_POST["ci"]);
-
-                       
-if( $nombre=="" )
-                {
-                
-                    echo "
-   <script> alert('campos vacios')</script>
-   ";
-                    echo "<br>";
-                    
-                }
-        else
-           {
-
-
-
-
-
-
-
-$sql="delete from usuarios where id_usuarios='$x1' ";
-
-
-$bd->consulta($sql);
-                          
-
-   
-                            //echo "Datos Guardados Correctamente";
-                            echo '<div class="alert alert-success alert-dismissable">
-                                        <i class="fa fa-check"></i>
-                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                        <b>Bien!</b> Se Elimino Correctamente... ';
-
-
-
-echo "
-Nombre: '$nombre',
-apellido='$apellido' ,
-cedula='$ci' ,
-correo='$correo',
-id_usuarios='$x1'
-";
-                               echo '   </div>';
-                           
-                            
-                        
-
-
-
-}
-   
-}
-
-
-                                        
-     $consulta="SELECT cedula, nombre, apellido, correo FROM usuarios where id_usuarios='$x1'";
-     $bd->consulta($consulta);
-     while ($fila=$bd->mostrar_registros()) {
-
-
-
-?>
-  <div class="col-md-10">
-                            <!-- general form elements -->
-                            <div class="box box-primary">
-                                <div class="box-header">
-                                    <h3 class="box-title">Eliminar Empleados</h3>
-                                </div>
-                                
-                            
-        <?php  echo '  <form role="form"  name="fe" action="?mod=registro&eliminar=eliminar&codigo='.$x1.'" method="post">';
-        ?>
-                                    <div class="box-body">
-                                        <div class="form-group">
-                                           
-                                            
-                                            
-                                            
-                                            <label for="exampleInputFile">Nombre</label>
-                                            <input  onkeypress="return caracteres(event)" onblur="this.value=this.value.toUpperCase();" type="text" required type="tex" name="nombre" class="form-control" value="<?php echo  $fila[nombre] ?>" id="exampleInputEmail1" placeholder="Intoducir el Nombre">
-                                            <label for="exampleInputFile">Apellido</label>
-                                            <input  onkeypress="return caracteres(event)" onblur="this.value=this.value.toUpperCase();" required type="tex" name="apellido" class="form-control" value="<?php echo  $fila[apellido] ?>" id="exampleInputEmail1" placeholder="Apellido">
-                                            <label for="exampleInputFile">cedula</label>
-                                            <input onkeydown="return enteros(this, event)" required type="text" name="ci" class="form-control" value="<?php echo $fila[cedula] ?>" id="exampleInputEmail1" placeholder="Cedula">
-                                            <label for="exampleInputFile">correo</label>
-                                            <input  required type="email" name="correo" class="form-control" value="<?php echo $fila[correo] ?>"  placeholder="Correo">
-                                            
-                                           
-                                            
-  
-                                        </div>
-                                       
-                                     
-                                        
-                                    </div><!-- /.box-body -->
-
-                                    <div class="box-footer">
-                                        <input type=submit  class="btn btn-primary btn-lg" name="eliminar" id="eliminar" value="ELIMINAR">
-                                        
-                                    
- 
-
-                                    </div>
-                                </form>
-                            </div><!-- /.box -->
-<?php
-
-
-}
-
-
-
-
+    // Ejecutar la consulta
+    if ($bd->consulta($sql)) {
+        echo '<div class="alert alert-success alert-dismissable">
+                <i class="fa fa-check"></i>
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <b>Bien!</b> Usuario eliminado correctamente...
+            </div>';
+    } else {
+        echo '<div class="alert alert-danger alert-dismissable">
+                <i class="fa fa-check"></i>
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <b>Error:</b> No se pudo eliminar el usuario. ' . $bd->obtenerError() . '
+            </div>';
+    }
 }
 ?>
-
-
-
-

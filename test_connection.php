@@ -2,7 +2,7 @@
 $servidor = 'localhost';
 $usuario = 'root';
 $pass = '';
-$base_datos = 'basecelulares';
+$base_datos = 'farmacos';
 
 $conexion = new mysqli($servidor, $usuario, $pass, $base_datos);
 

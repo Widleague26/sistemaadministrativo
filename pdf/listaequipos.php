@@ -7,9 +7,9 @@ include"../inc/comun.php";
 include"../fpdf/fpdf.php";
 
 
- $bd = new GestarBD;
- 
- $x1=$_GET['codigo'];
+$bd = new GestarBD;
+if(isset($_GET['codigo']))
+$x1=$_GET['codigo'];
 
 date_default_timezone_set('America/caracas');
 $hora = date('H:i:s a');
@@ -114,7 +114,7 @@ $num = 0;
 		$apellido = $datos ['descripcion'];
 		
 		$sexo = $datos ['marca'];
-		$p= $datos ['p_publico'];
+		$p= $datos ['Gramos_ML'];
 		$am = $datos ['cod'];
 		$cantidad = $datos ['cantidad'];
 		$marca = $datos ['marca'];
@@ -258,7 +258,20 @@ function Footer()
 
 }
 }
-	
+
+define('FPDF_FONTPATH','./font/');
+require('fpdf.php');
+
+$pdf = new FPDF();
+$pdf->AddFont('Helvetica','B','helveticab.php');
+$pdf->SetFont('Helvetica','B',12);
+
+$pdf->AddPage();
+$pdf->Cell(0,10,'¡Hola Mundo en Helvetica-Bold!',0,1);
+$pdf->Output();
+
+
+
 	
 
 ?>

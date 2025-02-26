@@ -112,7 +112,7 @@ $num = 0;
 		$apellido = $datos ['descripcion'];
 		
 		$sexo = $datos ['marca'];
-		$p= $datos ['p_publico'];
+		$p= $datos ['Gramos_ML'];
 		$tipo = $datos ['descripcion_p'];
 		$num2 = $datos ['n_serie'];
 		$marca = $datos ['marca'];

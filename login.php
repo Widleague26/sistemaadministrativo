@@ -6,7 +6,7 @@ include 'inc/comun.php'; ?>
         <meta charset="UTF-8">
         <title>Sistema administrativo</title>
         <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-        <link rel="icon" type="image/png" href="../images/client_13.png" />
+        <link rel="icon" type="img/png" href="img/principial.jpg" />
         <!-- bootstrap 3.0.2 -->
         <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <!-- font Awesome -->
@@ -83,8 +83,9 @@ include 'inc/comun.php'; ?>
                                 </div>';
         }
     }
+    if (isset($_GET['codigo'])) {
     $codigo = $_GET['codigo'];
-    if (isset($codigo)) {
+
         $query = "SELECT * FROM registros_temp WHERE codigo = '$codigo'";
         $bd->consulta($query);
         if ($temp_resg = $bd->mostrar_registros()) {
@@ -164,7 +165,7 @@ include 'inc/comun.php'; ?>
 
                     $mensaje = '<html><body>';
                     $mensaje = '<center>';
-                    $mensaje .= '<img src="http://dondequeda.com.ve/images/logo.png" alt="Space Invaders" width="70" />';
+                    $mensaje .= '<img src="img/principial.jpg" alt="Space Invaders" width="70" />';
                     $mensaje .= '<table rules="all" border="1" style="border-color: #666;" cellpadding="10">';
                     $mensaje .= "<tr style='background: #eee;'><td><strong>Nombre:</strong> </td><td>" . $nombre . "</td></tr>";
                     $mensaje .= "<tr><td><strong>Email:</strong> </td><td>" . strip_tags($_POST['email']) . "</td></tr>";

@@ -7,9 +7,13 @@
 * Author:  Olivier PLATHEY                                                     *
 *******************************************************************************/
 
-define('FPDF_VERSION','1.7');
+if (!defined('FPDF_VERSION')) {
+    define('FPDF_VERSION', '1.7');
+}
 
+IF (!class_exists('FPDF')){
 class FPDF
+
 {
 var $page;               // current page number
 var $n;                  // current object number
@@ -102,6 +106,7 @@ function FPDF($orientation='P', $unit='mm', $size='A4')
 	$this->ColorFlag = false;
 	$this->ws = 0;
 	// Font path
+
 	if(defined('FPDF_FONTPATH'))
 	{
 		$this->fontpath = FPDF_FONTPATH;
@@ -523,7 +528,8 @@ function SetFont($family, $style='', $size=0)
 		// Test if one of the core fonts
 		if($family=='arial')
 			$family = 'helvetica';
-		if(in_array($family,$this->CoreFonts))
+			if(is_array($this->CoreFonts) && in_array($family, $this->CoreFonts)) 
+			
 		{
 			if($family=='symbol' || $family=='zapfdingbats')
 				$style = '';
@@ -653,7 +659,12 @@ function Cell($w, $h=0, $txt='', $border=0, $ln=0, $align='', $fill=false, $link
 		if($this->ColorFlag)
 			$s .= 'q '.$this->TextColor.' ';
 		$txt2 = str_replace(')','\\)',str_replace('(','\\(',str_replace('\\','\\\\',$txt)));
-		$s .= sprintf('BT %.2F %.2F Td (%s) Tj ET',($this->x+$dx)*$k,($this->h-($this->y+.5*$h+.3*$this->FontSize))*$k,$txt2);
+		$s .= sprintf('BT %.2F %.2F Td (%s) Tj ET', ($this->x + $dx) * $k, ($this->h - ($this->y + .5 * $h + .3 * $this->FontSize)) * $k, $txt2);
+	if ($this->underline) {
+    // Aquí podrías agregar más lógica para manejar la subrayado
+}
+
+		unset($variable);
 		if($this->underline)
 			$s .= ' '.$this->_dounderline($this->x+$dx,$this->y+.5*$h+.3*$this->FontSize,$txt);
 		if($this->ColorFlag)
@@ -1111,7 +1122,8 @@ function _beginpage($orientation, $size)
 		$size = $this->DefPageSize;
 	else
 		$size = $this->_getpagesize($size);
-	if($orientation!=$this->CurOrientation || $size[0]!=$this->CurPageSize[0] || $size[1]!=$this->CurPageSize[1])
+		if($orientation != $this->CurOrientation || $size == null || !isset($size[0]) || !isset($size[1]) || $size[0] != $this->CurPageSize[0] || $size[1] != $this->CurPageSize[1])
+
 	{
 		// New size or orientation
 		if($orientation=='P')
@@ -1120,17 +1132,20 @@ function _beginpage($orientation, $size)
 			$this->h = $size[1];
 		}
 		else
-		{
-			$this->w = $size[1];
-			$this->h = $size[0];
-		}
+{
+    if ($size != null && isset($size[0]) && isset($size[1])) {
+        $this->w = $size[1];
+        $this->h = $size[0];
+    }
+}
+
 		$this->wPt = $this->w*$this->k;
 		$this->hPt = $this->h*$this->k;
 		$this->PageBreakTrigger = $this->h-$this->bMargin;
 		$this->CurOrientation = $orientation;
 		$this->CurPageSize = $size;
 	}
-	if($orientation!=$this->DefOrientation || $size[0]!=$this->DefPageSize[0] || $size[1]!=$this->DefPageSize[1])
+	if($orientation != $this->DefOrientation || $size == null || $size[1]!=$this->DefPageSize[1])
 		$this->PageSizes[$this->page] = array($this->wPt, $this->hPt);
 }
 
@@ -1141,13 +1156,22 @@ function _endpage()
 
 function _loadfont($font)
 {
-	// Load a font definition file from the font directory
-	include($this->fontpath.$font);
-	$a = get_defined_vars();
-	if(!isset($a['name']))
-		$this->Error('Could not include font definition file');
-	return $a;
+    // Asegúrate de que la ruta de la fuente termine con una barra diagonal
+    $fontPath = rtrim($this->fontpath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+
+    // Verifica si el archivo de la fuente existe
+    if (file_exists($fontPath . $font)) {
+        include($fontPath . $font);
+        $a = get_defined_vars();
+        if (!isset($a['name'])) {
+            $this->Error('Could not include font definition file');
+        }
+        return $a;
+    } else {
+        $this->Error('Font definition file not found: ' . $font);
+    }
 }
+
 
 function _escape($s)
 {
@@ -1793,6 +1817,7 @@ function _enddoc()
 }
 // End of class
 }
+}
 
 // Handle special IE contype request
 if(isset($_SERVER['HTTP_USER_AGENT']) && $_SERVER['HTTP_USER_AGENT']=='contype')
@@ -1800,5 +1825,16 @@ if(isset($_SERVER['HTTP_USER_AGENT']) && $_SERVER['HTTP_USER_AGENT']=='contype')
 	header('Content-Type: application/pdf');
 	exit;
 }
+// hevtica B
+define('FPDF_FONTPATH','./font/');
+require('fpdf.php');
+
+$pdf = new FPDF();
+$pdf->AddFont('Helvetica','B','helveticab.php');
+$pdf->SetFont('Helvetica','B',12);
+
+$pdf->AddPage();
+$pdf->Cell(0,10,'¡Hola Mundo en Helvetica-Bold!',0,1);
+$pdf->Output
 
 ?>

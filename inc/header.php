@@ -206,7 +206,11 @@
                                 <li class="user-header bg-light-blue">
                                     <img src="img/avatar3.png" class="img-circle" alt="User Image" />
                                     <p>
-                                        <?php echo $_SESSION['dondequeda_nombre']." ".$_SESSION['dondequeda_apellido'];
+                                        <?php 
+                                        session_start();
+                                        $tipo = "";
+                                        echo $_SESSION['dondequeda_nombre']." ".$_SESSION['dondequeda_apellido'];
+                            
                                         echo "\n".$tipo;
                                          ?>
                                       

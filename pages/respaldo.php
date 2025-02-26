@@ -15,7 +15,7 @@ $b=date("H-m-s");
 	//  Conexi?n con la Base de Datos.
 	
 	$db_server			= "localhost"; 
-	$db_name				= "basecelulares"; 
+	$db_name				= "farmacos"; 
 	$db_username		= "root"; 
 	$db_password		= ""; 
 
@@ -28,7 +28,7 @@ $b=date("H-m-s");
 
 	//  Nombre del archivo.
 
-	$filename = "basecelulares_$a._.$b.sql";
+	$filename = "farmacos_$a._.$b.sql";
 
 
 //------------------------------------------------------------------------------------------

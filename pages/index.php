@@ -4,9 +4,9 @@
 		
 ?>
   <h4 class="page-header">
-                        OPCIONES PRINCIPALES PARA REGISTRO Y MANTENIMIENTO DE LA TIENDA"<small>seleccione la opción que desea editar o agregar dependiendo de la categoría <code>!seleccione correctamente¡</code><code></code></small>
+                        OPCIONES PRINCIPALES PARA REGISTRO Y MEDICAMENTOS DE LA TIENDA"<small>seleccione la opción que desea editar o agregar dependiendo de la categoría <code>!seleccione correctamente¡</code><code></code></small>
                    </h4>
-                    
+        
 					
                     <!-- Small boxes (Stat box) -->
                     <!-- Small boxes (Stat box) -->
@@ -138,7 +138,7 @@
                                         <?php
                                             if($tipo2==1){
                                         
-                                        $consulta="SELECT id_productos,p_publico, descripcion, modelo, marca, estado, cantidad FROM productos ORDER BY id_productos ASC ";
+                                        $consulta="SELECT id_productos,Gramos_ML, descripcion, modelo, marca, estado, cantidad FROM productos ORDER BY id_productos ASC ";
                                         $bd->consulta($consulta);
                                         while ($fila=$bd->mostrar_registros()) {
                                             switch ($fila['estado']) {
@@ -165,7 +165,7 @@
                                                         <td> $fila[marca]                                                        </td>
                                                        
                                                          <td>
-                                                            $fila[p_publico]
+                                                            $fila[Gramos_ML]
                                                         </td>
                                                         
                                                        

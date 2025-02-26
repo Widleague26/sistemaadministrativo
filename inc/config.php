@@ -14,7 +14,7 @@ $config = array(
 	"emailenvios"=>"",
 	"nombreenvios"=>"celulares?",
 	"servidor"=>"localhost",
-	"basedatos"=>"basecelulares",
+	"basedatos"=>"farmacos",
 	"usuario"=>"root",
 	"pass"=>"",
 
